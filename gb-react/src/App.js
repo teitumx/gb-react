@@ -1,25 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Message from "./components/message";
 
 function App() {
+  const msg = [
+    { id: 1, author: "Канье Уэст", message: "Hello world!" },
+    { id: 2, author: "Ким Кардашьян", message: "Goodbye world!" },
+  ];
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Message message={msg} />
     </div>
   );
 }
-
 export default App;
