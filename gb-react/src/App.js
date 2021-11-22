@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Message from "./components/Message";
-import Bot from "./components/Bot";
 
 function App() {
-  const [messageList, setMessageList] = useState([{}]);
+  const [messageList, setMessageList] = useState([]);
   const [author, setAuthor] = useState("");
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  const [showBotMessage, setShowBotMessage] = useState(false);
 
   function addNewMessage() {
-    setMessageList([...messageList, { author: author, message: message }]);
+    setMessageList((prev) => [...prev, { author: author, message: message }]);
     setAuthor("");
     setMessage("");
     setShowMessage(true);
   }
 
   useEffect(() => {
-    if (messageList.length > 1) {
+    if (
+      messageList.length >= 1 &&
+      messageList[messageList.length - 1].author !== "BOT"
+    ) {
       setTimeout(() => {
-        setShowBotMessage(true);
+        setMessageList([
+          ...messageList,
+          { author: "BOT", message: "Hello from BOT" },
+        ]);
       }, 2000);
     }
   }, [messageList]);
@@ -32,15 +36,10 @@ function App() {
           <div className="chat-history">
             <ul className="m-b-0">
               {showMessage
-                ? messageList.map(({ message, author }) => (
-                    <Message
-                      id={Math.random * 100}
-                      message={message}
-                      author={author}
-                    />
+                ? messageList.map(({ message, author }, i) => (
+                    <Message key={i} message={message} author={author} />
                   ))
                 : ""}
-              {showBotMessage ? <Bot /> : ""}
             </ul>
           </div>
           <div className="chat-message clearfix">

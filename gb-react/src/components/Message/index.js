@@ -1,13 +1,10 @@
 import React from "react";
 
-function Message({ author, message }) {
-  const date = new Date().toLocaleString();
-
+function Message({ author, message, i }) {
   return (
-    <li className="clearfix">
+    <li key={i} className="clearfix">
       <div className="message-data text-right">
         <span className="name-sent">{author}</span>
-        <span className="message-data-time">{date}</span>
         <img
           src="https://bootdey.com/img/Content/avatar/avatar7.png"
           alt="avatar"
