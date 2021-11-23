@@ -19,6 +19,20 @@ body {
 .text-right {
   text-align: right;
 }
+.messageBox {
+  background: #e0efff; /* Цвет фона */
+  color: #000000; /* Цвет текста */
+  padding: 10px; /* Поля вокруг текста */
+  border-radius: 5px; /* Уголки */
+  width: 40%;
+}
+
+.messages {
+  display: flex;
+  justify-content: right;
+  text-decoration: none;
+  margin: 20px;
+}
 
 .chat .chat-header {
   padding: 15px 20px;
