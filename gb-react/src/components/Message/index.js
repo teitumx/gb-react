@@ -1,8 +1,8 @@
 import React from "react";
 
-function Message({ author, message, i }) {
+function Message({ author, message, id }) {
   return (
-    <li key={i} className="messages">
+    <li key={id} className="messages">
       <div className="messageBox">
         <div className="name-sent">{author}</div>
         <div className="message other-message float-right">{message}</div>
