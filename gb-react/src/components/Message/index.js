@@ -1,14 +1,14 @@
 import React from "react";
 
-function Message({ author, message, id }) {
+const Message = ({ author, text, id }) => {
   return (
     <li key={id} className="messages">
       <div className="messageBox">
         <div className="name-sent">{author}</div>
-        <div className="message other-message float-right">{message}</div>
+        <div className="message other-message float-left">{text}</div>
       </div>
     </li>
   );
-}
+};
 
-export default Message;
+export { Message };

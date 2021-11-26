@@ -1,73 +1,77 @@
 import React, { useState, useEffect, useCallback } from "react";
-import "./App.css";
-import Header from "./components/Chatbox/Header";
-import Message from "./components/Message";
-import ChatList from "./components/Chatbox/ChatList";
-import Inputs from "./components/Chatbox/Inputs";
-import useStyles from "./components/styles";
-import AppRoutes from "./components/Routes";
+import { useParams } from "react-router-dom";
+import { Header } from "../Chatbox/Header";
+import { Message } from "../Message";
+import { ChatList } from "../Chatbox/ChatList";
+import { Inputs } from "../Chatbox/Inputs";
+import useStyles from "../styles";
 
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 
+const initialChats = {
+  "chat-1": [
+    { text: "some text", author: "Иван Иванов", id: "mess-1" },
+    { text: "some text2", author: "Иван Иванов", id: "mess-2" },
+  ],
+  "chat-2": [
+    { text: "some new text", author: "Петр Петров", id: "mess-3" },
+    { text: "some text2", author: "Петр Петров", id: "mess-4" },
+  ],
+};
+
 const chats = [
   {
-    id: 1,
+    id: "chat-1",
     name: "Иван Иванов",
-    text: "Привет, это Иван Иванов",
   },
   {
-    id: 2,
+    id: "chat-2",
     name: "Петр Петров",
-    text: "Привет, это Петр Петров",
-  },
-  {
-    id: 3,
-    name: "Николай Николаев",
-    text: "Привет, это Николай Николаев",
-  },
-  {
-    id: 4,
-    name: "Денис Денисов",
-    text: "Привет, это Денис Денисов",
-  },
-  {
-    id: 5,
-    name: "Илон Маск",
-    text: "Привет, это Илон Маск",
   },
 ];
 
 const Chats = () => {
+  const { chatId } = useParams();
   const classes = useStyles();
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState(initialChats);
 
-  const addNewMessage = useCallback((message) => {
-    setMessageList((prev) => [
-      ...prev,
-      {
-        message: message,
-        author: "ME",
-        id: `msg-${Date.now()}`,
-      },
-    ]);
-  }, []);
+  const addNewMessage = useCallback(
+    (text) => {
+      setMessageList((prevMess) => ({
+        ...prevMess,
+        [chatId]: [
+          ...prevMess[chatId],
+          {
+            text: text,
+            author: "ME",
+            id: `msg-${Date.now()}`,
+          },
+        ],
+      }));
+    },
+    [chatId]
+  );
 
-  useEffect(() => {
-    let timeout;
-    if (
-      messageList.length >= 1 &&
-      messageList[messageList.length - 1].author !== "BOT"
-    ) {
-      timeout = setTimeout(() => {
-        setMessageList([
-          ...messageList,
-          { author: "BOT", message: "Hello from BOT", id: `msg-${Date.now()}` },
-        ]);
-      }, 2000);
-    }
-    return () => clearTimeout(timeout);
-  }, [messageList]);
+  // Перестал работать БОТ, не понимаю, как исправить
+
+  // useEffect(() => {
+  //   let timeout;
+  //   if (
+  //     !!chatId &&
+  //     messageList[chatId].length >= 1 &&
+  //     messageList[chatId][messageList.length - 1].author !== "BOT"
+  //   ) {
+  //     timeout = setTimeout(() => {
+  //       addNewMessage({
+  //         text: "HELLO FROM BOT!",
+  //         author: "BOT",
+  //         id: `bot-${Date.now()}`,
+  //       });
+  //     }, 2000);
+  //   }
+  //   return () => clearTimeout(timeout);
+  // }, [messageList]);
 
   return (
     <Container maxWidth="lg">
@@ -75,22 +79,25 @@ const Chats = () => {
         <Header />
         <div className={classes.flex}>
           <ChatList chats={chats} classes={useStyles} />
-
-          <div className={classes.chatWindow}>
-            <div className="myMessage">
-              {messageList.map((message) => (
-                <Message
-                  key={message.id}
-                  message={message.message}
-                  author={message.author}
-                />
-              ))}
+          {!!chatId && (
+            <div className={classes.chatWindow}>
+              <div className="myMessage">
+                {messageList[chatId].map((message) => (
+                  <Message
+                    key={message.id}
+                    text={message.text}
+                    author={message.author}
+                  />
+                ))}
+              </div>
             </div>
+          )}
+        </div>
+        {!!chatId && (
+          <div className={classes.flexInput}>
+            <Inputs classes={useStyles} addNewMessage={addNewMessage} />
           </div>
-        </div>
-        <div className={classes.flexInput}>
-          <Inputs classes={useStyles} addNewMessage={addNewMessage} />
-        </div>
+        )}
       </Paper>
     </Container>
   );

@@ -7,42 +7,27 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 
-export default function ChatList({ chats, classes }) {
+const ChatList = ({ chats, classes }) => {
   return (
     <div className={classes.topicsWindow}>
-      {/* //   {chats.map((value) => { */}
-      {/* //     return (
-    //       <div>
-    //         <li>
-    //           <Link href={value.id}>{value.name}</Link>
-    //         </li>
-    //         <Routes>
-    //           <Route path={`${value.id}`} />
-    //         </Routes>
-    //       </div>
-    //     );
-    //   })} */}
-
       <List
         dense
         sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
       >
         {chats.map((value) => {
           return (
-            <ListItem key={value.id} disablePadding>
-              <ListItemButton>
-                <Routes>
-                  <Route path={`/${value.id}`} />
-                </Routes>
-                <ListItemAvatar>
-                  <Avatar src={`/static/images/avatar/${value + 1}.jpg`} />
-                </ListItemAvatar>
-                <ListItemText primary={value.name} />
-              </ListItemButton>
+            <ListItem className="list-item" key={value.id} disablePadding>
+              <ListItemAvatar>
+                <Avatar src={`/static/images/avatar/${value + 1}.jpg`} />
+              </ListItemAvatar>
+              {/* <ListItemText primary={value.name} /> */}
+              <Link to={`/chats/${value.id}`}>{value.name}</Link>
             </ListItem>
           );
         })}
       </List>
     </div>
   );
-}
+};
+
+export { ChatList };

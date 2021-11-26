@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     borderRight: "1px solid #FAFAFA",
   },
   chatWindow: {
-    width: "60%",
+    width: "80%",
     padding: "20px",
   },
   chatBox: {

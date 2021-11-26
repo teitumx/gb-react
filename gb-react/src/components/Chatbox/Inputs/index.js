@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import TextField from "@mui/material/TextField";
 
-export default function Inputs({ classes, addNewMessage }) {
+const Inputs = ({ classes, addNewMessage }) => {
   const messageRef = useRef();
   const [value, setValue] = useState("");
 
@@ -40,4 +40,6 @@ export default function Inputs({ classes, addNewMessage }) {
       </Button>
     </form>
   );
-}
+};
+
+export { Inputs };

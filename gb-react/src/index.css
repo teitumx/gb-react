@@ -171,6 +171,26 @@ body {
   padding: 10px;
 }
 
+.list-item {
+  padding-bottom: 10px;
+}
+
+a:link {
+  color: #497ddd;
+  text-decoration: none;
+}
+a:visited {
+  color: #497ddd;
+}
+a:hover {
+  color: tomato;
+  border-bottom: 0.04em solid;
+}
+a:active {
+  color: #497ddd;
+  border-bottom: 1px dashed;
+}
+
 @media only screen and (max-width: 767px) {
   .chat-app .people-list {
     height: 465px;
