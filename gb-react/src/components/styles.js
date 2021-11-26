@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme) => ({
     color: "blue",
   },
   topicsWindow: {
-    width: "30%",
+    width: "40%",
     borderRight: "1px solid #FAFAFA",
   },
   chatWindow: {
-    width: "100%",
+    width: "60%",
     padding: "20px",
   },
   chatBox: {

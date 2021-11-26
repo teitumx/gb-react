@@ -38,7 +38,7 @@ const chats = [
   },
 ];
 
-function App() {
+const Chats = () => {
   const classes = useStyles();
   const [messageList, setMessageList] = useState([]);
 
@@ -94,5 +94,5 @@ function App() {
       </Paper>
     </Container>
   );
-}
-export default App;
+};
+export { Chats };
