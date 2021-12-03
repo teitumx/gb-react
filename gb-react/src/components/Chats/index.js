@@ -1,76 +1,91 @@
-import React, { useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useCallback, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import { Header } from "../Chatbox/Header";
 import { Message } from "../Message";
 import { ChatList } from "../Chatbox/ChatList";
 import { Inputs } from "../Chatbox/Inputs";
-import useStyles from "../styles";
+import { addChat, delChat } from "../../store/chats/actions";
+import { addMessage } from "../../store/messages/actions";
 
+import { selectChats } from "../../store/chats/selectors";
+import { selectMessages } from "../../store/messages/selesctors";
+
+import useStyles from "../styles";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-
-const initialChats = {
-  "chat-1": [
-    { text: "some text", author: "Иван Иванов", id: "mess-1" },
-    { text: "some text2", author: "Иван Иванов", id: "mess-2" },
-  ],
-  "chat-2": [
-    { text: "some new text", author: "Петр Петров", id: "mess-3" },
-    { text: "some text2", author: "Петр Петров", id: "mess-4" },
-  ],
-};
-
-const chats = [
-  {
-    id: "chat-1",
-    name: "Иван Иванов",
-  },
-  {
-    id: "chat-2",
-    name: "Петр Петров",
-  },
-];
 
 const Chats = () => {
   const { chatId } = useParams();
   const classes = useStyles();
-  const [messageList, setMessageList] = useState(initialChats);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const addNewMessage = useCallback(
-    (text) => {
-      setMessageList((prevMess) => ({
-        ...prevMess,
-        [chatId]: [
-          ...prevMess[chatId],
-          {
-            text: text,
-            author: "ME",
-            id: `msg-${Date.now()}`,
-          },
-        ],
-      }));
-    },
-    [chatId]
+  const messageList = useSelector(selectMessages);
+  const chats = useSelector(selectChats);
+
+  const chatExists = useMemo(
+    () => !!chats.find(({ id }) => id === chatId),
+    [chatId, chats]
   );
 
-  // Перестал работать БОТ, не понимаю, как исправить
+  const addNewMessage = useCallback(
+    (text, author) => {
+      dispatch(addMessage(chatId, text, author));
+    },
+    [chatId, dispatch]
+  );
+
+  const handleAddMessage = useCallback(
+    (text) => {
+      addNewMessage("Me", text);
+    },
+    [addNewMessage]
+  );
+
+  //добавление нового чата
+  const addNewChat = useCallback(
+    (name) => {
+      dispatch(addChat(name));
+    },
+    [dispatch]
+  );
+
+  //удаление чата
+  const deleteChat = useCallback(
+    (id) => {
+      dispatch(delChat(id));
+
+      if (chatId !== id) {
+        return;
+      }
+
+      if (chats.length === 1) {
+        navigate(`/${chats[0].id}`);
+      } else {
+        navigate("/");
+      }
+    },
+    [chats, chatId, dispatch, navigate]
+  );
 
   // useEffect(() => {
-  //   let timeout;
-  //   if (
-  //     !!chatId &&
-  //     messageList[chatId].length >= 1 &&
-  //     messageList[chatId][messageList.length - 1].author !== "BOT"
-  //   ) {
-  //     timeout = setTimeout(() => {
-  //       addNewMessage({
-  //         text: "HELLO FROM BOT!",
-  //         author: "BOT",
-  //         id: `bot-${Date.now()}`,
-  //       });
-  //     }, 2000);
-  //   }
-  //   return () => clearTimeout(timeout);
+  // let timeout;
+  // const curMess = messageList[chatId];
+  // if (
+  // messageList[chatId].length >= 1 &&
+  // curMess?.[curMess.length - 1]?.author !== "BOT"
+  // ) {
+  // timeout = setTimeout(() => {
+  // addNewMessage({
+  // text: "HELLO FROM BOT!",
+  // author: "BOT",
+  // id: `bot-${Date.now()}`,
+  // });
+  // }, 2000);
+  // }
+  // return () => clearTimeout(timeout);
   // }, [messageList]);
 
   return (
@@ -78,15 +93,21 @@ const Chats = () => {
       <Paper className={classes.root} elevation={1}>
         <Header />
         <div className={classes.flex}>
-          <ChatList chats={chats} classes={useStyles} />
-          {!!chatId && (
+          <ChatList
+            chats={chats}
+            onAddChat={addNewChat}
+            onDeleteChat={deleteChat}
+            classes={useStyles}
+          />
+          {!!chatId && chatExists && (
             <div className={classes.chatWindow}>
               <div className="myMessage">
-                {messageList[chatId].map((message) => (
+                {(messageList[chatId] || []).map((message) => (
                   <Message
                     key={message.id}
                     text={message.text}
                     author={message.author}
+                    chatId={chatId}
                   />
                 ))}
               </div>
@@ -95,7 +116,7 @@ const Chats = () => {
         </div>
         {!!chatId && (
           <div className={classes.flexInput}>
-            <Inputs classes={useStyles} addNewMessage={addNewMessage} />
+            <Inputs classes={useStyles} addNewMessage={handleAddMessage} />
           </div>
         )}
       </Paper>
