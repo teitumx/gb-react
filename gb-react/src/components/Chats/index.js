@@ -7,7 +7,7 @@ import { Message } from "../Message";
 import { ChatList } from "../Chatbox/ChatList";
 import { Inputs } from "../Chatbox/Inputs";
 import { addChat, delChat } from "../../store/chats/actions";
-import { addMessage } from "../../store/messages/actions";
+import { addMessageWithRepply } from "../../store/messages/actions";
 
 import { selectChats } from "../../store/chats/selectors";
 import { selectMessages } from "../../store/messages/selesctors";
@@ -32,14 +32,14 @@ const Chats = () => {
 
   const addNewMessage = useCallback(
     (text, author) => {
-      dispatch(addMessage(chatId, text, author));
+      dispatch(addMessageWithRepply(chatId, text, author));
     },
     [chatId, dispatch]
   );
 
   const handleAddMessage = useCallback(
     (text) => {
-      addNewMessage("Me", text);
+      addNewMessage("ME", text);
     },
     [addNewMessage]
   );
@@ -69,24 +69,6 @@ const Chats = () => {
     },
     [chats, chatId, dispatch, navigate]
   );
-
-  // useEffect(() => {
-  // let timeout;
-  // const curMess = messageList[chatId];
-  // if (
-  // messageList[chatId].length >= 1 &&
-  // curMess?.[curMess.length - 1]?.author !== "BOT"
-  // ) {
-  // timeout = setTimeout(() => {
-  // addNewMessage({
-  // text: "HELLO FROM BOT!",
-  // author: "BOT",
-  // id: `bot-${Date.now()}`,
-  // });
-  // }, 2000);
-  // }
-  // return () => clearTimeout(timeout);
-  // }, [messageList]);
 
   return (
     <Container maxWidth="lg">

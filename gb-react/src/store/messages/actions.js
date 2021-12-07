@@ -17,3 +17,15 @@ export const deleteMessage = (chatId, id) => ({
     id,
   },
 });
+
+let timeout;
+
+export const addMessageWithRepply = (chatId, author, text) => (dispatch) => {
+  dispatch(addMessage(chatId, author, text));
+  if (author === "ME") {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      dispatch(addMessage(chatId, "BOT", "Hello, from BOT"));
+    }, 2000);
+  }
+};
