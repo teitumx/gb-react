@@ -1,0 +1,3 @@
+{
+  "configurations": []
+}{"name":"Debug macOS","request":"launch","type":"reactnative","cwd":"${workspaceFolder}","platform":"macos"}
