@@ -14,11 +14,25 @@ const Profile = () => {
   const handleChange = () => {
     dispatch(toggleShowName);
   };
+
+  const API = "https://jsonplaceholder.typicode.com/users";
+
+  fetch(API)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error!");
+      }
+      return response.json();
+    })
+    .then((result) => console.log(result))
+    .catch((err) => console.log(err));
+
   return (
     <Container>
       <h3>
         <b>Name:</b> {showName && name}
       </h3>
+
       <div>
         <FormControlLabel
           control={<Checkbox defaultChecked />}

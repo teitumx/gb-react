@@ -175,6 +175,16 @@ body {
   padding-bottom: 10px;
 }
 
+a.one:link {
+  color: #ffffff;
+}
+a.one:visited {
+  color: #ffffff;
+}
+a.one:hover {
+  color: #dbdbdb;
+}
+
 a:link {
   color: #497ddd;
   text-decoration: none;
