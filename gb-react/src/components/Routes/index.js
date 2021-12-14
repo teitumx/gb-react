@@ -9,7 +9,6 @@ import { Login } from "../Login";
 import { auth, login, signOut, signUp } from "../../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { SignUp } from "../SignUp";
-import { Navigate } from "react-router-dom";
 
 const AppRoutes = () => {
   const [authed, setAuthed] = useState(false);
@@ -66,7 +65,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* Чаты */}
-      <Route path="/chats/:chatId/*" element={<PrivateRoute />} authed={authed}>
+      <Route path="/chats/:chatId/*" element={<PublicRoute />} authed={authed}>
         <Route exact path="/chats/:chatId/*" element={<Chats />} />
       </Route>
 

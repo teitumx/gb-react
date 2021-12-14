@@ -13,7 +13,7 @@ import {
   initMessages,
 } from "../../store/messages/actions";
 
-import { selectChats } from "../../store/chats/selectors";
+import { selectChats, selectIfChatExists } from "../../store/chats/selectors";
 import { selectMessages } from "../../store/messages/selesctors";
 
 import useStyles from "../styles";
@@ -24,10 +24,6 @@ const Chats = () => {
   const { chatId } = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const messageList = useSelector(selectMessages);
-  // const chats = useSelector(selectChats);
 
   useEffect(() => {
     const chats = dispatch(initChats());
@@ -35,16 +31,16 @@ const Chats = () => {
     dispatch(initMessages());
   }, []);
 
-  // const chatExists = useMemo(
-  //   () => !!chats.find(({ id }) => id === chatId),
-  //   [chatId, chats]
-  // );
+  const messageList = useSelector(selectMessages);
+
+  const selectChatExists = useMemo(() => selectIfChatExists(chatId), [chatId]);
+  const chatExists = useSelector(selectChatExists);
 
   const addNewMessage = useCallback(
     (text, author) => {
       dispatch(addMessageFromFireBase(text, author, chatId));
     },
-    [chatId, dispatch]
+    [chatId]
   );
 
   const handleAddMessage = useCallback(
@@ -63,30 +59,20 @@ const Chats = () => {
   );
 
   //удаление чата
-  // const deleteChat = useCallback(
-  //   (id) => {
-  //     dispatch(delChat(id));
-
-  //     if (chatId !== id) {
-  //       return;
-  //     }
-
-  //     if (chats.length === 1) {
-  //       navigate(`/${chats[0].id}`);
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   },
-  //   [chats, chatId, dispatch, navigate]
-  // );
+  const deleteChat = useCallback(
+    (id) => {
+      dispatch(delChat(id));
+    },
+    [dispatch]
+  );
 
   return (
     <Container maxWidth="lg">
       <Paper className={classes.root} elevation={1}>
         <Header />
         <div className={classes.flex}>
-          {/* <ChatList classes={useStyles} /> */}
-          {!!chatId && (
+          <ChatList classes={useStyles} onDeleteChat={deleteChat} />
+          {!!chatId && chatExists && (
             <div className={classes.chatWindow}>
               <div className="myMessage">
                 {(Object.values(messageList[chatId] || {}) || []).map(

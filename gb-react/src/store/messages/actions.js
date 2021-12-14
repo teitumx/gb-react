@@ -32,7 +32,7 @@ export const initMessages = () => (dispatch) => {
   const messagesDbRef = ref(db, "messages");
   onValue(messagesDbRef, (snapshot) => {
     const data = snapshot.val();
-    // dispatch(setMessages(data));
+
     dispatch(setMessages(data || {}));
   });
 };

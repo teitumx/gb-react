@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import ChatItem from "../ChatItem";
 import List from "@mui/material/List";
 import { Button } from "@mui/material";
 import "./chatList.css";
 
-import uniqid from "uniqid";
-
-import { db } from "../../../services/firebase";
-import { ref, set, onValue } from "firebase/database";
 import { selectChats } from "../../../store/chats/selectors";
 import { addChatFireBase } from "../../../store/chats/actions";
 
 const ChatList = ({ classes, onAddChat, onDeleteChat }) => {
-  // const [chats, setChats] = useState([]);
   const chats = useSelector(selectChats);
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
@@ -24,17 +19,6 @@ const ChatList = ({ classes, onAddChat, onDeleteChat }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // if (value !== "") {
-    //   onAddChat(value);
-    // }
-    // setValue("");
-
-    // const newId = uniqid();
-    // const chatsDbRef = ref(db, `chats/${newId}`);
-    // set(chatsDbRef, {
-    //   id: newId,
-    //   name: value,
-    // });
     dispatch(addChatFireBase(value));
 
     setValue("");
