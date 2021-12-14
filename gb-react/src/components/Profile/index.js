@@ -1,45 +1,53 @@
-import React from "react";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { toggleShowName } from "../../store/profile/actions";
+import React, { useEffect, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "@mui/material";
 
-const Profile = () => {
+import { db } from "../../services/firebase";
+import { ref, set, onValue } from "firebase/database";
+
+const Profile = ({ onLogout }) => {
   const showName = useSelector((state) => state.showName);
   const dispatch = useDispatch();
+  const [name, setName] = useState("");
+  const [value, setValue] = useState("");
 
-  const name = "Eric";
+  useEffect(() => {
+    const userDbRef = ref(db, "user");
+    onValue(userDbRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("--------", data);
+      setName(data?.user || "");
+    });
+  }, []);
 
-  const handleChange = () => {
-    dispatch(toggleShowName);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setValue("");
+    set(ref(db, "user"), {
+      user: value,
+    });
   };
 
-  const API = "https://jsonplaceholder.typicode.com/users";
+  const handleChange = (e) => {
+    // dispatch(toggleShowName);
+    setValue(e.target.value);
+  };
 
-  fetch(API)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Error!");
-      }
-      return response.json();
-    })
-    .then((result) => console.log(result))
-    .catch((err) => console.log(err));
+  const handleLogout = () => {
+    onLogout();
+  };
 
   return (
     <Container>
-      <h3>
-        <b>Name:</b> {showName && name}
-      </h3>
+      <button onClick={handleLogout}>Logout</button>
 
-      <div>
-        <FormControlLabel
-          control={<Checkbox defaultChecked />}
-          label="Показывать имя?"
-          onChange={handleChange}
-        />
-      </div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={value} onChange={handleChange} />
+        <button type="submit">Submit</button>
+      </form>
+
+      <div>{name}</div>
     </Container>
   );
 };

@@ -23,7 +23,7 @@ export const NewsItem = ({ article }) => {
       </CardContent>
       <CardActions>
         <Button size="small">
-          <a href={article.url} target="_blank">
+          <a href={article.url} target="_blank" rel="noreferrer">
             Подробнее
           </a>
         </Button>
