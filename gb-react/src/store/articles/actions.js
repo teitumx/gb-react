@@ -29,6 +29,7 @@ export const getArticles = () => (dispatch) => {
     })
     .then((result) => {
       dispatch(getArticlesSuccess(result.articles));
+      console.log(result);
     })
     .catch((err) => {
       console.log(err);
